@@ -1,0 +1,24 @@
+<div class="d-flex justify-content-center container mt-5">
+    <div class="card p-3 bg-white"><i class="fa fa-apple"></i>
+        <div class="about-product text-center mt-2"><img src="/../../images/{{ model }}.jpg" width="300">
+        </div>
+        <div class="stats mt-2">
+            <div class="d-flex justify-content-between p-price"><span>Price: </span><span>{{ price }}</span></div>
+            <div class="d-flex justify-content-between p-price"><span>Brand: </span><span>{{ brand }}</span></div>
+            <div class="d-flex justify-content-between p-price"><span>Model: </span><span>{{ model }}</span></div>
+        </div>
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center pb-2 mb-1">
+                <a href="/jewelry?{{ info }}{{ id }}=true" class="detalji">{{ infoAction }}</a>
+                <a href="/jewelry?comments{{ id }}=true" class="detalji">Komentari</a>
+                <a href="/jewelry?{{ actionLink }}{{ id }}=true" class="detalji" {{ hidden }}>{{ action }}</a>
+                <a href="/jewelry?delete{{ id }}=true" class="detalji"> Izbrisi </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+<hr class="my-0" />
+</div>
+
+</div>

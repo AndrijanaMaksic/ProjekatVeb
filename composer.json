@@ -1,0 +1,19 @@
+{
+
+  "name": "andrijana/veb-projekat",
+  "autoload": {
+    "psr-4": {
+      "vebProjekat\\": "src"
+    }
+  },
+  "authors": [
+    {
+      "name": "Andrijana",
+      "email": "ana.maksic@gmail.com"
+    }
+  ],
+  "require": {
+    "monolog/monolog": "^3.2",
+    "mpdf/mpdf": "^6.1"
+  }
+}

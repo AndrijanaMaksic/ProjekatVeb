@@ -1,0 +1,17 @@
+<div class="userCard" style="border:1px solid black; background-color:white">
+    <div class="card-user">
+        <div class="card-user-body">
+            <div class="bg-effects">
+                <h2 class="card-user-title">{{ username }}</h2>
+            </div>
+            <ul>
+                <li>Ime :<span>{{ ime }}</span></li>
+                <li>Prezime :<span>{{ prezime }}</span></li>
+                <li>Email :<span>{{ email }}</span></li>
+            </ul>
+        </div>
+        <div class="bg-custom">
+            <a class="btn btn-primary iznajmiDugme" href='/users?ukloni{{ username1 }}=true'><p>Ukloni korisnika</p></a>
+        </div>
+    </div>
+</div>

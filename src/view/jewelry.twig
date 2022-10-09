@@ -1,0 +1,20 @@
+<div class="search">
+    <form class="form-inline my-2 my-lg-0 searchForm" method="post">
+        <input class="form-control mr-sm-2 inp" name="search" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success inp1 my-2 my-sm-0" type="submit">Search</button>
+    </form>
+    <br>
+
+</div>
+<div class="filter">
+    <form method="post" action="/jewelry">
+        <h4> Filtriranje po tipovima </h4>
+        {{ types }}
+        <button class="btn btn-primary filterButton" type="submit" value={{ type }}>Filtriraj</button>
+        <button class="btn btn-primary filterButton" type="submit" value="ponisti">Poništi filtere</button>
+    </form>
+</div>
+
+<div>
+    {{ content }}
+</div>
