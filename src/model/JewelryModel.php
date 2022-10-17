@@ -30,7 +30,7 @@ class JewelryModel
 
     public function getByType($type) {
         $db = Database::connect();
-        $q = "SELECT jewelry.model, jewelry.price, jewelry_brand.brand FROM jewelry 
+        $q = "SELECT jewelry.model, jewelry.price, jewelry_brand.brand, id FROM jewelry
                 INNER JOIN jewelry_brand on jewelry.brand_id=jewelry_brand.id
                 INNER JOIN jewelry_type ON jewelry.type_id = jewelry_type.id
                 WHERE jewelry_type.type='$type'";
@@ -126,4 +126,28 @@ class JewelryModel
         $q = "DELETE FROM jewelry WHERE id='$id';";
         $query = mysqli_query($db, $q);
     }
+
+
+    public function getComments(int $id) {
+        $db = Database::connect();
+        $q = "SELECT
+            comment.comment,
+            user.username
+        FROM comment
+        INNER JOIN jewelry ON comment.jewelry_id = jewelry.id
+        INNER JOIN user ON comment.customer_id = user.id
+        WHERE jewelry.id='$id'";
+
+        $query = mysqli_query($db, $q);
+        return mysqli_fetch_all($query);
+    }
+
+    public function addComment(int $id, $user, string $comment) {
+        $db = Database::connect();
+        $q = "INSERT INTO comment (customer_id, jewelry_id, comment) VALUES (
+                '$user', '$id', '$comment'
+            )";
+        $query = mysqli_query($db, $q);
+    }
+
 }

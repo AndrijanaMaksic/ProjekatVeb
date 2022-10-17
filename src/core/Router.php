@@ -49,10 +49,29 @@ class Router {
         $content = $this->getPageContent($view);
         $navbarContent = $this->getLayout('navbar');
         $returnView = $this->getContent("defaultLayout");
-        $returnView = str_replace('{{ navbar }}', $navbarContent, $returnView);
+//        $returnView = str_replace('{{ navbar }}', $navbarContent, $returnView);
         $returnView = str_replace("{{ content }}", $content, $returnView);
 
+        if ( $this->getSessionStatus() ) {
+            $navbarContent = str_replace('{{ loggedOut }}', 'hidden', $navbarContent );
+        } else {
+            $navbarContent = str_replace('{{ loggedIn }}', 'hidden', $navbarContent );
+        }
+        echo $this->getUserType($this->getUserEmail());
+        if ($this->getUserType($this->getUserEmail()) == "admin" || $this->getUserType($this->getUserEmail()) == "employee") {
+            $navbarContent = str_replace('{{ radnik }}', '', $navbarContent );
+        } else if ($this->getUserType($this->getUserEmail()) == "korisnik" || $this->getUserType($this->getUserEmail()) == "") {
+            $navbarContent = str_replace('{{ admin }}', 'hidden', $navbarContent );
+            $navbarContent = str_replace('{{ radnik }}', 'hidden', $navbarContent );
+        }
+        if($this->getUserType($this->getUserEmail()) == "admin") {
+            $navbarContent = str_replace('{{ admin }}', '', $navbarContent);
+        } else {
+            $navbarContent = str_replace('{{ admin }}', 'hidden', $navbarContent);
+        }
 
+
+        $returnView = str_replace('{{ navbar }}', $navbarContent, $returnView);
         if (isset($params["message"] ) ) {
             $returnView = str_replace('{{ errorStatus }}', "", $returnView);
             $returnView = str_replace('{{ error }}', $params["message"], $returnView);
@@ -70,7 +89,7 @@ class Router {
     }
     public function getLayout($name) {
         ob_start();
-        include_once (Application::$ROOT_DIR."/vebProjekat/src/view/home.twig");
+        include_once (Application::$ROOT_DIR."/vebProjekat/src/view/$name.twig");
         return ob_get_clean();
     }
 
@@ -111,5 +130,17 @@ class Router {
         } else {
             return "";
         }
+    }
+
+    public function getSessionStatus() {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        if ( isset($_SESSION["loggedStatus"]) ) {
+            if ($_SESSION["loggedStatus"] == true) {
+                return true;
+            }
+        }
+        return false;
     }
 }

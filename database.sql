@@ -20,48 +20,6 @@ CREATE TABLE IF NOT EXISTS `user` (
       ON UPDATE CASCADE
 ) ENGINE = InnoDB;
 
-/*
-CREATE TABLE IF NOT EXISTS `admin` (
-    `id` INT NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(45) NOT NULL,
-    `surname` VARCHAR(45) NOT NULL,
-    `date_of_birth` DATE NOT NULL,
-    `user_id` INT,
-    PRIMARY KEY (`id`),
-    CONSTRAINT `fk_user`
-      FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
-      ON DELETE CASCADE
-      ON UPDATE CASCADE
-) ENGINE = InnoDB;
-
-CREATE TABLE IF NOT EXISTS `employee` (
-    `id` INT NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(45) NOT NULL,
-    `surname` VARCHAR(45) NOT NULL,
-    `employed_since` DATE NOT NULL,
-    `date_of_birth` DATE NOT NULL,
-    `user_id` INT,
-    PRIMARY KEY (`id`),
-    CONSTRAINT `fk_user1`
-      FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
-      ON DELETE CASCADE
-      ON UPDATE CASCADE
-) ENGINE = InnoDB;
-
-CREATE TABLE IF NOT EXISTS `customer` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NOT NULL,
-  `surname` VARCHAR(45) NOT NULL,
-  `date_of_birth` DATE NOT NULL,
-  `customer_points` INT UNSIGNED NOT NULL,
-  `user_id` INT,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `fk_user2`
-      FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
-      ON DELETE CASCADE
-      ON UPDATE CASCADE
-)ENGINE = InnoDB;
-*/
 CREATE TABLE IF NOT EXISTS `jewelry_brand` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `brand` VARCHAR(45) NOT NULL,
@@ -93,7 +51,6 @@ CREATE TABLE IF NOT EXISTS `jewelry` (
   `brand_id` INT NOT NULL,
   `gender_id` INT NOT NULL,
   `color_id` INT NOT NULL,
-  `image_path` VARCHAR(45) NOT NULL,
   `type_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_color`
@@ -137,27 +94,6 @@ CREATE TABLE IF NOT EXISTS `order` (
     ON UPDATE CASCADE
 )ENGINE = InnoDB;
 
-/*CREATE TABLE IF NOT EXISTS `payment` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `total_price` DECIMAL(10,2) NOT NULL,
-  `employee_id` INT NOT NULL,
-  `rent_car_id` INT NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `rent_car_id_UNIQUE` (`rent_car_id` ASC),
-  INDEX `fk_made_payment_employee1_idx` (`employee_id` ASC),
-  INDEX `fk_made_payment_rent_car1_idx` (`rent_car_id` ASC),
-  CONSTRAINT `fk_made_payment_employee1`
-    FOREIGN KEY (`employee_id`)
-    REFERENCES `employee` (`id`)
-    ON DELETE RESTRICT
-    ON UPDATE CASCADE,
-  CONSTRAINT `fk_made_payment_rent_car1`
-    FOREIGN KEY (`rent_car_id`)
-    REFERENCES `rent_car` (`id`)
-    ON DELETE RESTRICT
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;*/
-
 CREATE TABLE IF NOT EXISTS `comment` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `comment` TEXT(1000) NOT NULL,
@@ -182,20 +118,6 @@ CREATE TABLE IF NOT EXISTS `rating` (
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
-
-
-/*INSERT INTO `admin` (`id`, `name`, `surname`, `date_of_birth`) VALUES
-(1, 'Jovan', 'Jovanovic', '1980-03-08');
-
-INSERT INTO `customer` (`id`, `name`, `surname`, `date_of_birth`, `customer_points`) VALUES
-(1, 'Stefan', 'Mihajlovic', '1999-03-01', 0),
-(2, 'Milica', 'Stefanovic', '1994-02-15', 0),
-(3, 'Sanja', 'Stevanovic', '2000-11-09', 0);
-
-INSERT INTO `employee` (`id`, `name`, `surname`, `employed_since`, `date_of_birth`) VALUES
-(1, 'Milos', 'Arsic', '2019-01-18', '1995-02-15'),
-(2, 'Milan', 'Djordjevic', '2021-05-10', '1983-03-09');
-*/
 INSERT INTO `user_type`(`id`,`type`) VALUES
 (1, 'admin'),
 (2, 'customer'),

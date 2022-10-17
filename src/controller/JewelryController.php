@@ -31,7 +31,12 @@ class JewelryController extends Controller
             $_POST['search'] = "";
         }
 
-
+        $numOfPages = ceil(count($jewelryList) / 8);
+        $pages = "<ul class='pagination'>";
+        for($i = 1; $i <= $numOfPages; $i++) {
+            $pages = $pages . "<li class='page-item'><a class='page-link' href='/jewelry?page$i=true'>$i</a></li>";
+        }
+        $pages = $pages . "</ul>";
         $items = '';
 
 
@@ -53,19 +58,43 @@ class JewelryController extends Controller
 
         $id1 = (int)trim($id1, '/jewelry?info');
 
+        $userType = $this->getUsertype($user);
+        echo $userType;
+        for($i = 1; $i <= $numOfPages; $i++) {
+            //if (isset($_GET['page' . $i])) {
+                foreach (array_slice($jewelryList, ($i - 1) * 5, 5) as $jewelry) {
+//                    switch ($userType) {
+//                        case 'user' :
+//                            echo 'user';
+                    if($userType == 'user') {
+                        $item = file_get_contents(Application::$ROOT_DIR . "/vebProjekat/src/view/jewelryItem.twig");
+                        $item = str_replace('{{ infoAction }}', "info", $item);
+                        $item = str_replace('{{ info }}', "info", $item);
+                        $item = str_replace('{{ id }}', $jewelry[3], $item);
+                        $item = str_replace("{{ price }}", $jewelry[1], $item);
+                        $item = str_replace("{{ brand }}", $jewelry[2], $item);
+                        $item = str_replace("{{ model }}", $jewelry[0], $item);
+                        $items = str_replace('{{ pages }}', $pages, $items);
+                        $items = str_replace('{{ action2 }}', 'Komentari', $items);
+                        $items = str_replace('{{ action2Link }}', 'comments', $items);
 
-        foreach ($jewelryList as $jewelry){
-            $item = file_get_contents(Application::$ROOT_DIR . "/vebProjekat/src/view/jewelryItem.twig");
-            $item = str_replace('{{ infoAction }}', "info", $item);
-            $item = str_replace('{{ info }}', "info", $item);
-            $item = str_replace('{{ id }}', $jewelry[3], $item);
-            $item = str_replace("{{ price }}", $jewelry[1],$item);
-            $item = str_replace("{{  brand }}", $jewelry[2],$item);
-            $item = str_replace("{{ model }}", $jewelry[0],$item);
+                        $items = $items . $item;
+                } else if($userType == 'employee' || $userType == 'admin') {
+                        $item = file_get_contents(Application::$ROOT_DIR . "/vebProjekat/src/view/jewelryItem.twig");
+                        $item = str_replace('{{ infoAction }}', "Promeni detalje", $item);
+                        $item = str_replace('{{ info }}', "update", $item);
+                        $item = str_replace('{{ id }}', $jewelry[3], $item);
+                        $item = str_replace("{{ price }}", $jewelry[1], $item);
+                        $item = str_replace("{{ brand }}", $jewelry[2], $item);
+                        $item = str_replace("{{ model }}", $jewelry[0], $item);
+                        $items = str_replace('{{ pages }}', $pages, $items);
+                        $items = str_replace('{{ action2 }}', 'Obriši', $items);
+                        $items = str_replace('{{ action2Link }}', 'delete', $items);
 
-            $items = $items.$item;
+                        $items = $items . $item;
+                    }
+            }
         }
-
         if (isset($_GET['info'. $id1])) {
             if($user != "") {
                 $info = $this->jewelryModel->jewelryInfo($id1);
@@ -86,6 +115,24 @@ class JewelryController extends Controller
         if (isset($_GET['delete' . $deleteUri])) {
             $this->jewelryModel->deleteJewelry($deleteUri);
             header("Location: /jewelry");
+        }
+
+
+        $commentUri = $_SERVER['REQUEST_URI'];
+        $commentUri = trim($commentUri, '=true');
+        $commentUri = (int)trim($commentUri, '/jewelry?comments');
+        if(isset($_GET['comments'. $commentUri])) {
+            if($user != "") {
+                $comments = $this->jewelryModel->getComments($commentUri);
+                $items= file_get_contents(Application::$ROOT_DIR . "/vebProjekat/src/view/comments.twig");
+
+                $allComments = $this->getComments($comments);
+                $items = str_replace('{{ content }}', $allComments, $items);
+
+                $this->setComment($commentUri, $user);
+            } else {
+                header("Location: /login");
+            }
         }
 
 
@@ -119,6 +166,31 @@ class JewelryController extends Controller
         $this->jewelryModel->insertJewelry($model, $price, $brand, $gender, $color, $type);
 
         header("Location: /jewelry");
+    }
+
+    public function getComments($comments) {
+        $allComments = "";
+        foreach($comments as $comm) {
+            $comment = file_get_contents(Application::$ROOT_DIR . "/vebProjekat/src/view/comment.twig");
+            $comment = str_replace('{{ name }}', $comm[1], $comment);
+            $comm[1];
+            $comment = str_replace('{{ comment }}', $comm[0], $comment);
+            $allComments = $allComments . $comment;
+        }
+
+        return $allComments;
+    }
+
+    public function setComment($commentUri, $user) {
+        if(!empty($_POST)) {
+            if($user != "") {
+                if($_POST['addComment'] != "") {
+                    $this->jewelryModel->addComment($commentUri, $user, $_POST['addComment']);
+                    $_POST["addComment"] = "";
+                    header("Location: /jewelry?comments$commentUri=true");
+                }
+            }
+        }
     }
 
 

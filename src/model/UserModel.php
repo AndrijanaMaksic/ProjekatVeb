@@ -38,10 +38,7 @@ class UserModel
 
         $q = "SELECT * FROM user
         INNER JOIN user_type ON user.type_id = user_type.id
-        WHERE user_type.type='customer';
-
-        ";
-        echo  $q;
+        WHERE user_type.type='customer';";
         $query = mysqli_query($db, $q);
         return mysqli_fetch_all($query);
     }

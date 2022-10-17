@@ -9,6 +9,7 @@ use vebProjekat\controller\UserController;
 use vebProjekat\core\Application;
 $app = new Application(dirname(__DIR__));
 
+$app->router->get('/home', 'home');
 $app->router->get('/', 'home');
 $app->router->get('/login','login');
 $app->router->post('/login', [LoginController::class,'checkUser']);
