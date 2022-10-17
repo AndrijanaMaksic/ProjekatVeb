@@ -39,11 +39,11 @@ class UserController extends Controller
             if (isset($_GET['page'.$i])) {
                 foreach((array_slice($array, ($i-1) * 6, 6)) as $customer) {
                     $item = file_get_contents(Application::$ROOT_DIR . "/vebProjekat/src/view/user.twig");
-                    $item = str_replace('{{ ime }}', $customer[4], $item);
-                    $item = str_replace('{{ prezime }}', $customer[5], $item);
+                    $item = str_replace('{{ ime }}', $customer[2], $item);
+                    $item = str_replace('{{ prezime }}', $customer[3], $item);
                     $item = str_replace('{{ email }}', $customer[1], $item);
-                    $item = str_replace('{{ username }}', $customer[6], $item);
-                    $item = str_replace('{{ username1 }}', $customer[6], $item);
+                    $item = str_replace('{{ username }}', $customer[4], $item);
+                    $item = str_replace('{{ username1 }}', $customer[4], $item);
 
                     if($this->getUsertype($this->getUseremail()) == 'employee') {
                         $item = str_replace('{{ adminUkloni }}', 'hidden', $item);
@@ -58,7 +58,6 @@ class UserController extends Controller
         $uri = $_SERVER['REQUEST_URI'];
         $username1 = trim($uri, '=true');
         $username1 = substr($username1, 13);
-        echo $username1;
         if(isset($_GET['ukloni'.$username1])) {
             $this->userModel->deleteUser($username1);
             header("Location:/users");
@@ -126,9 +125,5 @@ class UserController extends Controller
         $nav = $nav . $content;
 
         return $nav;
-    }
-
-    public function listOfUsers() {
-        $this->userModel->report();
     }
 }

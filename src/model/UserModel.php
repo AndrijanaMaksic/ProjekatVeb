@@ -70,47 +70,4 @@ class UserModel
         $query = mysqli_query($db, $q);
     }
 
-
-    public function report() {
-        $array = $this->getAllUsers();
-        $mpdf = new Mpdf();
-        $mpdf->WriteHTML(
-            '<!DOCTYPE html>
-        <html>
-        <head>
-        </head>
-        <body>
-            <h1 style="text-align: center;">Svi korisnici </h1>
-            <table id="customers" border=1> 
-                <tr>
-                <th>
-                    Ime
-                </th>
-                <th>
-                    Prezime
-                </th>
-            </tr>
-          
-    
-            ');
-
-        foreach($array as $person) {
-            $mpdf->WriteHTML(
-                '<tr>
-                    <td>' . $person[2] . '</td>
-                    <td>' . $person[3] . '</td>
-                    <td>' . $person[4] . '</td>
-                </tr>');
-        }
-
-        $mpdf->WriteHTML('
-        </table>
-        </body>
-        </html>
-        ');
-
-        $mpdf->Output('izlistaniKorisnici.pdf', 'D');
-
-    }
-
 }

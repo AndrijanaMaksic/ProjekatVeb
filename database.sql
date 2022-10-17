@@ -79,7 +79,6 @@ CREATE TABLE IF NOT EXISTS `order` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `customer_id` INT NOT NULL,
   `jewelry_id` INT NOT NULL,
-  `quantity` INT NOT NULL,
   `price` DOUBLE NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_customer1`

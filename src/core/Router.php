@@ -57,10 +57,9 @@ class Router {
         } else {
             $navbarContent = str_replace('{{ loggedIn }}', 'hidden', $navbarContent );
         }
-        echo $this->getUserType($this->getUserEmail());
         if ($this->getUserType($this->getUserEmail()) == "admin" || $this->getUserType($this->getUserEmail()) == "employee") {
             $navbarContent = str_replace('{{ radnik }}', '', $navbarContent );
-        } else if ($this->getUserType($this->getUserEmail()) == "korisnik" || $this->getUserType($this->getUserEmail()) == "") {
+        } else if ($this->getUserType($this->getUserEmail()) == "customer" || $this->getUserType($this->getUserEmail()) == "") {
             $navbarContent = str_replace('{{ admin }}', 'hidden', $navbarContent );
             $navbarContent = str_replace('{{ radnik }}', 'hidden', $navbarContent );
         }

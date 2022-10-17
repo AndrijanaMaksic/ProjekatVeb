@@ -2,6 +2,7 @@
 
 namespace vebProjekat\model;
 
+use Fpdf\Fpdf;
 use vebProjekat\core\Database;
 
 class JewelryModel
@@ -30,7 +31,7 @@ class JewelryModel
 
     public function getByType($type) {
         $db = Database::connect();
-        $q = "SELECT jewelry.model, jewelry.price, jewelry_brand.brand, id FROM jewelry
+        $q = "SELECT jewelry.model, jewelry.price, jewelry_brand.brand, jewelry.id FROM jewelry
                 INNER JOIN jewelry_brand on jewelry.brand_id=jewelry_brand.id
                 INNER JOIN jewelry_type ON jewelry.type_id = jewelry_type.id
                 WHERE jewelry_type.type='$type'";
@@ -94,7 +95,6 @@ class JewelryModel
         $db = Database::connect();
 
         $q = "SELECT id FROM jewelry_color WHERE jewelry_color.color = '$color';";
-        echo $q;
         $query = mysqli_query($db, $q);
         $types = mysqli_fetch_all($query);
 
@@ -148,6 +148,46 @@ class JewelryModel
                 '$user', '$id', '$comment'
             )";
         $query = mysqli_query($db, $q);
+    }
+    public function buyJewelry($user, $jewelry_id, $price) {
+        $db = Database::connect();
+        $q = "INSERT INTO `order`(`customer_id`, `jewelry_id`, `price`) VALUES (
+            $user, $jewelry_id, $price
+            )";
+        $query = mysqli_query($db, $q);
+    }
+
+    public function getPrice($jewelry_id) {
+        $db = Database::connect();
+        $q = "SELECT price FROM jewelry WHERE jewelry.id = $jewelry_id";
+        return (int)(mysqli_query($db, $q)->fetch_assoc())['price'];
+    }
+
+    public function getUserId($email) {
+        $db = Database::connect();
+        $q = "SELECT id FROM user WHERE user.email = '$email'";
+        return (int)(mysqli_query($db, $q)->fetch_assoc())['id'];
+    }
+
+    public function izvestaj() {
+        $jewelryList = $this->findAll();
+        $fpdf = new Fpdf();
+        $fpdf->AddPage();
+        $fpdf->SetFont('arial','',12);
+        $fpdf->Cell(150,10, "Nakit", 1, 1, 'C');
+
+        $fpdf->Cell(50, 10, 'Model', 1, 0);
+        $fpdf->Cell(50, 10, 'Cena', 1, 0);
+        $fpdf->Cell(50, 10, 'Brend', 1, 0);
+
+        foreach ($jewelryList as $jewelry) {
+            $fpdf->Ln();
+            $fpdf->Cell(50, 10, $jewelry[0], 1, 0);
+            $fpdf->Cell(50, 10, $jewelry[1], 1, 0);
+            $fpdf->Cell(50, 10, $jewelry[2], 1, 0);
+        }
+
+        $fpdf->Output('listaNakita.pdf', 'D');
     }
 
 }

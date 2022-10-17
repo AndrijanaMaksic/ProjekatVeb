@@ -59,14 +59,10 @@ class JewelryController extends Controller
         $id1 = (int)trim($id1, '/jewelry?info');
 
         $userType = $this->getUsertype($user);
-        echo $userType;
         for($i = 1; $i <= $numOfPages; $i++) {
-            //if (isset($_GET['page' . $i])) {
+            if (isset($_GET['page' . $i])) {
                 foreach (array_slice($jewelryList, ($i - 1) * 5, 5) as $jewelry) {
-//                    switch ($userType) {
-//                        case 'user' :
-//                            echo 'user';
-                    if($userType == 'user') {
+                    if ($userType == 'customer') {
                         $item = file_get_contents(Application::$ROOT_DIR . "/vebProjekat/src/view/jewelryItem.twig");
                         $item = str_replace('{{ infoAction }}', "info", $item);
                         $item = str_replace('{{ info }}', "info", $item);
@@ -79,7 +75,7 @@ class JewelryController extends Controller
                         $items = str_replace('{{ action2Link }}', 'comments', $items);
 
                         $items = $items . $item;
-                } else if($userType == 'employee' || $userType == 'admin') {
+                    } else if ($userType == 'employee' || $userType == 'admin') {
                         $item = file_get_contents(Application::$ROOT_DIR . "/vebProjekat/src/view/jewelryItem.twig");
                         $item = str_replace('{{ infoAction }}', "Promeni detalje", $item);
                         $item = str_replace('{{ info }}', "update", $item);
@@ -93,6 +89,7 @@ class JewelryController extends Controller
 
                         $items = $items . $item;
                     }
+                }
             }
         }
         if (isset($_GET['info'. $id1])) {
@@ -134,7 +131,19 @@ class JewelryController extends Controller
                 header("Location: /login");
             }
         }
-
+        $buyUri = $_SERVER['REQUEST_URI'];
+        $buyUri= trim($buyUri, '=true');
+        $buyUri = (int)trim($buyUri, '/jewelry?buy');
+        if(isset($_GET['buy'. $buyUri])) {
+            if($user != "") {
+                $price = $this->jewelryModel->getPrice($buyUri);
+                $userId = $this->jewelryModel->getUserId($user);
+                $this->jewelryModel->buyJewelry($userId, $buyUri, $price);
+                header("Location: /jewelry");
+            } else {
+                header("Location: /login");
+            }
+        }
 
         $preview = str_replace("{{ content }}", $items, $preview);
         return $preview;
@@ -192,6 +201,8 @@ class JewelryController extends Controller
             }
         }
     }
-
+    public function izvestaj() {
+        $this->jewelryModel->izvestaj();
+    }
 
 }
